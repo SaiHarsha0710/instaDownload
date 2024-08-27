@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import "./App.css";
 
+
 export default function App() {
   const [url, setUrl] = useState('');
   const [videoUrl, setVideoUrl] = useState('');
@@ -27,6 +28,7 @@ export default function App() {
       setVideoUrl(url);
       setVideoGot(true);
     } catch (error) {
+      
       console.error('Error fetching video:', error);
     }
     setGettingVideo(false);
@@ -49,7 +51,7 @@ export default function App() {
         <button type="submit" className="button">Get Video</button>
       </form>
       {gettingVideo && <p className="message">Downloading video, please wait...</p>}
-      {videoGot && <button onClick={download} className="button">Download Video</button>}
+      {videoGot && <button onClick={download} className="button1">Download Video</button>}
     </div>
   );
 }
