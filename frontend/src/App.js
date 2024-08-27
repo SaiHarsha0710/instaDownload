@@ -16,24 +16,30 @@ export default function App() {
   const handleSubmit = async (event) => {
     event.preventDefault();
     setGettingVideo(true);
-    const response = await axios.post("http://localhost:4000/urlSubmit", { url });
-    console.log(response.data);
+    setVideoGot(false); // Reset video state
+    setVideoUrl(''); // Clear previous video URL
     try {
-      const response = await axios.get('http://localhost:4000/getVideoFile', {
-        responseType: 'blob'
-      });
-      console.log(response);
-      const videoBlob = new Blob([response.data], { type: 'video/mp4' });
-      const url = URL.createObjectURL(videoBlob);
-      setVideoUrl(url);
-      setVideoGot(true);
+      const response = await axios.post("http://localhost:4000/urlSubmit", { url });
+  
+      if (response.data.success) { // Check if the response was successful
+        const videoResponse = await axios.get('http://localhost:4000/getVideoFile', {
+          responseType: 'blob'
+        });
+  
+        const videoBlob = new Blob([videoResponse.data], { type: 'video/mp4' });
+        const videoUrl = URL.createObjectURL(videoBlob);
+        setVideoUrl(videoUrl);
+        setVideoGot(true);
+      } else {
+        alert('Invalid URL, please check and try again.');
+      }
     } catch (error) {
-      
       console.error('Error fetching video:', error);
+      alert('Error occurred, please check your URL or try again later.');
     }
     setGettingVideo(false);
-  }
-
+  };
+  
   const download = async () => {
     const a = document.createElement('a');
     a.href = videoUrl;
