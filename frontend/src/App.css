@@ -43,7 +43,7 @@ body {
 }
 
 h1 {
-  font-size: 48px; /* Increase font size */
+  font-size: 40px; /* Increase font size */
   margin-bottom: 20px;
   color: var(--text-color);
   text-shadow: 0 0 10px var(--box-shadow-color);
@@ -51,7 +51,7 @@ h1 {
 
 .input {
   width: 95%; /* Increase width */
-  padding: 25px; /* Increase padding */
+  padding: 20px; /* Increase padding */
   margin-bottom: 30px;
   border: 2px solid var(--input-border-color);
   border-radius: 4px;
