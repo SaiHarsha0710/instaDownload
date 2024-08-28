@@ -13,27 +13,45 @@ export default function App() {
     setUrl(event.target.value);
   }
 
-  const handleSubmit = async(event)=>{
+  const handleSubmit = async (event) => {
     event.preventDefault();
     setGettingVideo(true);
-    const response = await axios.post("http://localhost:4000/urlSubmit",{
-        url : url
-    })
-    console.log(response.data);
+    
     try {
-        const response = await axios.get('http://localhost:4000/getVideoFile', {
-          responseType: 'blob'
-        });
-        console.log(response);
-        const videoBlob = new Blob([response.data], { type: 'video/mp4' });
-        const url = URL.createObjectURL(videoBlob);
-        setVideoUrl(url);
-        setVideoGot(true)
-      } catch (error) {
-        console.error('Error fetching video:', error);
+      const response = await axios.post("http://localhost:4000/urlSubmit", {
+        url: url
+      });
+  
+      console.log(response.data);
+  
+      if (response.data.success) {
+        try {
+          const videoResponse = await axios.get('http://localhost:4000/getVideoFile', {
+            responseType: 'blob'
+          });
+  
+          console.log(videoResponse);
+          const videoBlob = new Blob([videoResponse.data], { type: 'video/mp4' });
+          const videoUrl = URL.createObjectURL(videoBlob);
+          setVideoUrl(videoUrl);
+          setVideoGot(true);
+        } catch (error) {
+          console.error('Error fetching video:', error);
+        }
+      } else {
+        // Alert the user about the invalid URL
+        alert(response.data.message || 'The given URL is wrong.');
+        //page needed to be reload
+        window.location.reload();
       }
-      setGettingVideo(false)
-}
+    } catch (error) {
+      console.error('Error processing the request:', error);
+      alert('Failed to process the URL. Please try again.');
+    }
+  
+    setGettingVideo(false);
+  };
+  
 
   
   const download = async () => {
