@@ -24,7 +24,19 @@ app.get('/getVideoFile', (req, res) => {
 app.post("/urlSubmit", async (req, res) => {
   const urlsend = req.body.url;
   console.log(urlsend);
-
+  async function saveVideoFromURL(url, filename) {
+    try {
+      const response = await axios.get(url, { responseType: "stream" });
+      const writer = fs.createWriteStream(filename);
+      response.data.pipe(writer);
+      return new Promise((resolve, reject) => {
+        writer.on("finish", resolve);
+        writer.on("error", reject);
+      });
+    } catch (error) {
+      console.error("Error occurred while saving the video:", error);
+    }
+  }
   const options = {
     method: "GET",
     url: "https://instagram-downloader-download-instagram-videos-stories1.p.rapidapi.com/get-info-rapidapi",
@@ -32,15 +44,18 @@ app.post("/urlSubmit", async (req, res) => {
       url: urlsend,
     },
     headers: {
-      "X-RapidAPI-Key": "1354ddc61fmsh0758c2b03f881ccp1d5a28jsnc728103f7251",
-      "X-RapidAPI-Host": "instagram-downloader-download-instagram-videos-stories1.p.rapidapi.com",
+      "X-RapidAPI-Key": "e27fcf74d2msh36b241ce0a6998fp1c8c66jsn241702730bef",
+      "X-RapidAPI-Host":
+        "instagram-downloader-download-instagram-videos-stories1.p.rapidapi.com",
     },
   };
-
+  
   try {
     var response = await axios.request(options);
+    console.log('API Response:', response.data); // Log the entire response
 
-    if (response.data && response.data.download_url) { // Check if the download URL exists
+    // Check if response.data and response.data.download_url exist
+    if (response.data && response.data.download_url) {
       const videoUrl = response.data.download_url;
       const videoFilename = "saved_video.mp4";
 
@@ -48,30 +63,14 @@ app.post("/urlSubmit", async (req, res) => {
       console.log("Video saved successfully!");
       res.json({ success: true, message: "Video saved in backend" });
     } else {
-      console.error("Invalid URL or no video found");
+      console.error("Invalid URL or no video found in the API response.");
       res.json({ success: false, message: "Invalid URL or no video found" });
     }
   } catch (error) {
-    console.error("Error occurred while processing the URL:", error);
-    res.json({ success: false, message: "Failed to process the URL" });
+    console.error("Error processing the request:", error);
+    res.status(500).json({ success: false, message: "Failed to process the URL" });
   }
 });
-
-async function saveVideoFromURL(url, filename) {
-  try {
-    const response = await axios.get(url, { responseType: "stream" });
-    const writer = fs.createWriteStream(filename);
-    response.data.pipe(writer);
-    return new Promise((resolve, reject) => {
-      writer.on("finish", resolve);
-      writer.on("error", reject);
-    });
-  } catch (error) {
-    console.error("Error occurred while saving the video:", error);
-    throw error; // Re-throw error to handle it in the calling function
-  }
-}
-
 app.listen(4000, (req, res) => {
   console.log("running");
 });
