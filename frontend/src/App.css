@@ -1,12 +1,13 @@
 /* Define your theme colors */
 :root {
   --background-color: #000000;
-  --text-color: #00ffcc;
-  --input-border-color: #3f5257;
+  --text-color: cyan;
+  --input-color1:#66ff00;
+  --input-border-color: #CC00FF;
   --input-bg-color: #333333;
   --button-bg-color: #94c71f;
-  --button-bg-color1: #1faec7;
-  --button-hover-bg-color: #1e5772;
+  --button-bg-color1: #ff5733;
+  --button-hover-bg-color: aqua;
   --box-shadow-color: #09ff00;
 }
 
@@ -56,7 +57,7 @@ h1 {
   border: 2px solid var(--input-border-color);
   border-radius: 4px;
   background-color: var(--input-bg-color);
-  color: var(--text-color);
+  color: var(--input-color1);
   outline: none;
   box-shadow: 0 0 10px var(--input-border-color);
 }
